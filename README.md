@@ -1,1 +1,1 @@
-<img width="722" height="724" alt="Parking Lot System" src="https://github.com/user-attachments/assets/eadfbb5a-54b7-49ea-901f-35c5af04fc89" />
+<img width="722" height="724" alt="Parking Lot System" src="https://github.com/user-attachments/assets/6c5f67e8-628a-4afb-b84e-38a8423f98ef" />
