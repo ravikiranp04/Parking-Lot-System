@@ -1,3 +1,5 @@
+import java.math.BigDecimal;
+
 public enum VehicleType {
     CAR(40),
     BIKE(20),

@@ -1,10 +1,13 @@
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class ParkingSystem {
-
-    private static Map<VehicleType, Queue<Integer>> availableSlotIds;
-    private static Map<String,Token> tokenIdToTokenMap;
+    private static final Logger log = Logger.getLogger(ParkingSystem.class.getName());
+    private final Object lock = new Object();
+    private Map<VehicleType, Queue<Integer>> availableSlotIds;
+    private Map<String,Token> tokenIdToTokenMap;
     ParkingSystem(int busSlots, int carSlots, int bikeSlots){
         tokenIdToTokenMap = new HashMap<>();
         availableSlotIds = new HashMap<>();
@@ -33,23 +36,20 @@ public class ParkingSystem {
         return new ParkingSlot(slotId,vehicleDetails);
     }
     Token createToken(Vehicle vehicleDetails){
-        ParkingSlot parkingSlot = assignParkingSlot(vehicleDetails);
-        Token tokenDetails = new Token(vehicleDetails,parkingSlot);
-        tokenIdToTokenMap.put(tokenDetails.getTokenid(),tokenDetails);
-        parkingSlot.setTokenDetails(tokenDetails);
-        return tokenDetails;
+        synchronized (lock){
+            ParkingSlot parkingSlot = assignParkingSlot(vehicleDetails);
+            Token tokenDetails = new Token(vehicleDetails,parkingSlot);
+            tokenIdToTokenMap.put(tokenDetails.getTokenid(),tokenDetails);
+            parkingSlot.setTokenDetails(tokenDetails);
+            return tokenDetails;
+        }
     }
     void exitVehicle(Token tokenDetails){
-        if(tokenDetails.getParkingSlot().getVehicleDetails()==null){
-            System.out.println("Invalid Token\n");
-            return;
-        }
         tokenDetails.setExitTime();
         tokenIdToTokenMap.remove(tokenDetails.getTokenid());
-        double totalFare = tokenDetails.calculateFare();
-        System.out.println("Please pay Rs. "+totalFare);
+        BigDecimal totalFare = tokenDetails.calculateFare();
+        log.info("Please pay Rs. "+totalFare);
         releaseParkingSlot(tokenDetails);
-        System.out.println("Gates Opened.\n");
     }
     void releaseParkingSlot(Token tokenDetails){
         ParkingSlot parkingSlot = tokenDetails.getParkingSlot();
