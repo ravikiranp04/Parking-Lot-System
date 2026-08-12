@@ -15,8 +15,9 @@ public class ParkingSystem {
         for(VehicleType vehicleType: VehicleType.values()){
             Queue<Integer> queue = new LinkedList<>();
             for(int i=1;i<=slotCountsByType.get(vehicleType);i++){
-                availableSlotIds.get(vehicleType).offer(i);
+                queue.offer(i);
             }
+            availableSlotIds.put(vehicleType,queue);
         }
         this.pricingStrategy=pricingStrategy;
     }
@@ -27,11 +28,11 @@ public class ParkingSystem {
         int slotId = availableSlotIds.get(vehicleDetails.getVehicleType()).poll();
         return new ParkingSlot(slotId,vehicleDetails);
     }
-    Token createToken(Vehicle vehicleDetails){
+    Token createToken(Vehicle vehicleDetails,Integer gateId){
         synchronized (lock){
             ParkingSlot parkingSlot = assignParkingSlot(vehicleDetails);
             BigDecimal pricePerHour = pricingStrategy.getHourlyPrice(vehicleDetails.getVehicleType());
-            Token tokenDetails = new Token(vehicleDetails,parkingSlot, pricePerHour);
+            Token tokenDetails = new Token(vehicleDetails,parkingSlot, pricePerHour,gateId);
             tokenIdToTokenMap.put(tokenDetails.getTokenid(),tokenDetails);
             parkingSlot.setTokenDetails(tokenDetails);
             return tokenDetails;
