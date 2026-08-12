@@ -27,22 +27,22 @@ public class Main {
         };
         return vehicleType;
     }
-    public static Token registerVehicleAndCreateToken(ParkingSystem parkingSystem,VehicleType vehicleType){
-        System.out.println("Enter Registration Number");
-        String registrationNumber = sc.next();
-        Vehicle vehicleDetails = new Vehicle(registrationNumber,vehicleType);
-        Token tokenDetails = parkingSystem.createToken(vehicleDetails);
-        return tokenDetails;
-    }
 
     public static ParkingSystem initializeParkingSystem(){
+        Map<VehicleType,Integer> slotsCountByType= new HashMap<>();
         System.out.println("Enter no of bus slots");
         int busSlots = sc.nextInt();
+        slotsCountByType.put(VehicleType.BUS,busSlots);
+
         System.out.println("Enter no of car slots");
         int carSlots = sc.nextInt();
+        slotsCountByType.put(VehicleType.CAR,carSlots);
+
         System.out.println("Enter no of bike slots");
         int bikeSlots = sc.nextInt();
-        ParkingSystem parkingSystem = new ParkingSystem(busSlots,carSlots,bikeSlots);
+        slotsCountByType.put(VehicleType.BIKE,bikeSlots);
+
+        ParkingSystem parkingSystem = new ParkingSystem(slotsCountByType, new PricingStrategy());
         return parkingSystem;
     }
 

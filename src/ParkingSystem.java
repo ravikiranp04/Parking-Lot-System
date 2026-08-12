@@ -8,25 +8,17 @@ public class ParkingSystem {
     private final Object lock = new Object();
     private Map<VehicleType, Queue<Integer>> availableSlotIds;
     private Map<String,Token> tokenIdToTokenMap;
-    ParkingSystem(int busSlots, int carSlots, int bikeSlots){
+    private PricingStrategy pricingStrategy;
+    ParkingSystem(Map<VehicleType, Integer> slotCountsByType,PricingStrategy pricingStrategy){
         tokenIdToTokenMap = new HashMap<>();
         availableSlotIds = new HashMap<>();
-
-        Queue<Integer> busQueue = new LinkedList<>();
-        for (int i = 1; i <= busSlots; i++)
-            busQueue.offer(i);
-        availableSlotIds.put(VehicleType.BUS, busQueue);
-
-        Queue<Integer> carQueue = new LinkedList<>();
-        for (int i = 1; i <= carSlots; i++)
-            carQueue.offer(i);
-        availableSlotIds.put(VehicleType.CAR, carQueue);
-
-        Queue<Integer> bikeQueue = new LinkedList<>();
-        for (int i = 1; i <= bikeSlots; i++)
-            bikeQueue.offer(i);
-        availableSlotIds.put(VehicleType.BIKE, bikeQueue);
-
+        for(VehicleType vehicleType: VehicleType.values()){
+            Queue<Integer> queue = new LinkedList<>();
+            for(int i=1;i<=slotCountsByType.get(vehicleType);i++){
+                availableSlotIds.get(vehicleType).offer(i);
+            }
+        }
+        this.pricingStrategy=pricingStrategy;
     }
     boolean checkSlotAvailability(VehicleType vehicleType){
         return availableSlotIds.get(vehicleType).size()>0;
@@ -38,7 +30,8 @@ public class ParkingSystem {
     Token createToken(Vehicle vehicleDetails){
         synchronized (lock){
             ParkingSlot parkingSlot = assignParkingSlot(vehicleDetails);
-            Token tokenDetails = new Token(vehicleDetails,parkingSlot);
+            BigDecimal pricePerHour = pricingStrategy.getHourlyPrice(vehicleDetails.getVehicleType());
+            Token tokenDetails = new Token(vehicleDetails,parkingSlot, pricePerHour);
             tokenIdToTokenMap.put(tokenDetails.getTokenid(),tokenDetails);
             parkingSlot.setTokenDetails(tokenDetails);
             return tokenDetails;

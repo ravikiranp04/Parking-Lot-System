@@ -9,17 +9,18 @@ public class Token {
     private Vehicle vehicleDetails;
     private ParkingSlot parkingSlot;
     private LocalDateTime entryTime;
+    private BigDecimal pricePerHour;
     private LocalDateTime exitTime;
     private Integer entryGateId;
     private Integer exitGateId;
     private static final Logger log = Logger.getLogger(Token.class.getName());
 
-    Token(Vehicle vehicleDetails, ParkingSlot parkingSlot){
+    Token(Vehicle vehicleDetails, ParkingSlot parkingSlot, BigDecimal pricePerHour){
         this.vehicleDetails=vehicleDetails;
         this.parkingSlot=parkingSlot;
         this.tokenid=UUID.randomUUID().toString();
         this.entryTime = LocalDateTime.now();
-
+        this.pricePerHour=pricePerHour;
     }
     void setExitTime(){
         this.exitTime=LocalDateTime.now();
@@ -49,9 +50,9 @@ public class Token {
         Duration totalDuration = Duration.between(entryTime, exitTime);
 
         BigDecimal totalHours = BigDecimal.valueOf(totalDuration.toMinutes() / 60.0);
-
+        VehicleType vehicleType = vehicleDetails.getVehicleType();
         System.out.println("Total Duration :"+ totalDuration.toHours()+ " hours "+totalDuration.toMinutes()%60+ "Mins.\n");
-        BigDecimal totalFare = totalHours.multiply(BigDecimal.valueOf(vehicleDetails.getVehicleType().getHourlyPrice()));
+        BigDecimal totalFare = totalHours.multiply(pricePerHour);
         return totalFare;
     }
     ParkingSlot getParkingSlot(){
