@@ -9,7 +9,7 @@ public class Main {
     static Scanner sc = new Scanner(System.in);
     private static final Logger log = Logger.getLogger(Main.class.getName());
     public static VehicleType selectVehicleType(){
-        System.out.println("Enter Vehicle Type (1/2/3) \n1.CAR\n2.BIKE\n3.BUS");
+        log.info("Enter Vehicle Type (1/2/3) \n1.CAR\n2.BIKE\n3.BUS");
         int num = sc.nextInt();
         VehicleType vehicleType = null;
         switch(num){
@@ -27,31 +27,31 @@ public class Main {
         };
         return vehicleType;
     }
-    public static Token registerVehicleAndCreateToken(ParkingSystem parkingSystem,VehicleType vehicleType){
-        System.out.println("Enter Registration Number");
-        String registrationNumber = sc.next();
-        Vehicle vehicleDetails = new Vehicle(registrationNumber,vehicleType);
-        Token tokenDetails = parkingSystem.createToken(vehicleDetails);
-        return tokenDetails;
-    }
 
     public static ParkingSystem initializeParkingSystem(){
-        System.out.println("Enter no of bus slots");
+        Map<VehicleType,Integer> slotsCountByType= new HashMap<>();
+        log.info("Enter no of bus slots");
         int busSlots = sc.nextInt();
-        System.out.println("Enter no of car slots");
+        slotsCountByType.put(VehicleType.BUS,busSlots);
+
+        log.info("Enter no of car slots");
         int carSlots = sc.nextInt();
-        System.out.println("Enter no of bike slots");
+        slotsCountByType.put(VehicleType.CAR,carSlots);
+
+        log.info("Enter no of bike slots");
         int bikeSlots = sc.nextInt();
-        ParkingSystem parkingSystem = new ParkingSystem(busSlots,carSlots,bikeSlots);
+        slotsCountByType.put(VehicleType.BIKE,bikeSlots);
+
+        ParkingSystem parkingSystem = new ParkingSystem(slotsCountByType, new PricingStrategy());
         return parkingSystem;
     }
 
     public static void main(String[] args) {
         //Initializing Parking System
         ParkingSystem parkingSystem = initializeParkingSystem();
-        System.out.println("Enter Number of Entry Gates");
+        log.info("Enter Number of Entry Gates");
         int entryGatesCount=sc.nextInt();
-        System.out.println("Enter Number of Exit Gates");
+        log.info("Enter Number of Exit Gates");
         int exitGatesCount = sc.nextInt();
         Map<Integer, Gate> entryGatesRegistry = new HashMap<>();
         for(int i=1;i<=entryGatesCount;i++){
@@ -59,23 +59,23 @@ public class Main {
         }
         Map<Integer, Gate> exitGatesRegistry = new HashMap<>();
         for(int i=1;i<=exitGatesCount;i++){
-            exitGatesRegistry.put(i,new Gate(i,GateType.ENTRY,parkingSystem));
+            exitGatesRegistry.put(i,new Gate(i,GateType.EXIT,parkingSystem));
         }
         while(true){
-           System.out.println("Enter an Option:\n1)Enter Vehicle\n2) Exit Vehicle");
+           log.info("----------\nEnter an Option:\n1)Enter Vehicle\n2) Exit Vehicle");
            int option = sc.nextInt();
            switch(option){
                case 1:
 
                    //Selecting Vehicle Type and Entry Gate Id
-                   System.out.println("Enter Entry Gate Id (Max: :"+entryGatesCount+")");
+                   log.info("Enter Entry Gate Id (Max: :"+entryGatesCount+")");
                    Integer entryGateId = sc.nextInt();
                    Gate entryGate = entryGatesRegistry.get(entryGateId);
 
                    //Selecting Vehicle Type
                    VehicleType vehicleType = selectVehicleType();
                    if(vehicleType==null){
-                       System.out.println("Invalid Vehicle Type");
+                       log.info("Invalid Vehicle Type");
                        break;
                    }
                    // Checking Slot availability
@@ -84,7 +84,7 @@ public class Main {
                         break;
                     }
                     //Enter Vehicle Reg No
-                   System.out.println("Enter Registration Number");
+                   log.info("Enter Registration Number");
                    String registrationNumber = sc.next();
                    Vehicle vehicleDetails = new Vehicle(registrationNumber,vehicleType);
 
@@ -93,12 +93,12 @@ public class Main {
                     break;
 
                case 2:
-                   System.out.println("Enter Exit Gate Id (Max: :"+exitGatesCount+")");
+                   log.info("Enter Exit Gate Id (Max: :"+exitGatesCount+")");
                    Integer exitGateId = sc.nextInt();
 
                    // Get Exit Gate Object
                    Gate exitGate = exitGatesRegistry.get(exitGateId);
-                   System.out.println("Scan the Token");
+                   log.info("Scan the Token");
                    String tokenId = sc.next();
 
                    // Checking Token Validity
@@ -108,10 +108,9 @@ public class Main {
                    }
                    // Retreiving Token Details and Exit clearance
                    exitGate.handleExit(tokenId);
-
                    break;
                default:
-                   System.out.println("Invalid Option");
+                   log.info("Invalid Option");
                    break;
            };
        }
