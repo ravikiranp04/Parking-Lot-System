@@ -1,3 +1,5 @@
+package ParkingSystem;
+
 import java.util.logging.Logger;
 
 public class Gate {
@@ -5,22 +7,22 @@ public class Gate {
     GateType gateType;
     ParkingSystem parkingSystem;
     private static final Logger log = Logger.getLogger(Gate.class.getName());
-    Gate(Integer gateId, GateType gateType, ParkingSystem parkingSystem){
+    public Gate(Integer gateId, GateType gateType, ParkingSystem parkingSystem){
         this.gateId=gateId;
         this.gateType=gateType;
         this.parkingSystem=parkingSystem;
     }
-    void handleEntry(Vehicle vehicleDetails){
+    public void handleEntry(Vehicle vehicleDetails){
         Token tokenDetails = parkingSystem.createToken(vehicleDetails,gateId);
-        log.info("Token Created for Vehicle "+vehicleDetails.getRegistrationNumber()+", "+vehicleDetails.getVehicleType()+" at Entry Gate: "+tokenDetails.getEntryGateId());
+        log.info("ParkingSystem.Token Created for ParkingSystem.Vehicle "+vehicleDetails.getRegistrationNumber()+", "+vehicleDetails.getVehicleType()+" at Entry ParkingSystem.Gate: "+tokenDetails.getEntryGateId());
         tokenDetails.printToken();
         return;
     }
-    void handleExit(String tokenId){
+    public void handleExit(String tokenId){
         Token tokenDetails = parkingSystem.getToken(tokenId);
         tokenDetails.setExitGateId(gateId);
         parkingSystem.exitVehicle(tokenDetails);
-        log.info("Gates Opened. Vehicle exit at Gate Id: "+gateId);
+        log.info("Gates Opened. ParkingSystem.Vehicle exit at ParkingSystem.Gate Id: "+gateId);
         return;
     }
 }

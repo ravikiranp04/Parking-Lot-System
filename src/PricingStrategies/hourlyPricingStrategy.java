@@ -1,3 +1,8 @@
+package PricingStrategies;
+import ParkingSystem.Token;
+import ParkingSystem.Vehicle;
+import ParkingSystem.VehicleType;
+
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.HashMap;
@@ -5,7 +10,7 @@ import java.util.Map;
 
 public class hourlyPricingStrategy implements pricingStrategy {
     private Map<VehicleType, BigDecimal> hourlyPrices;
-    hourlyPricingStrategy(){
+    public hourlyPricingStrategy(){
         hourlyPrices = new HashMap<>();
         hourlyPrices.put(VehicleType.CAR, BigDecimal.valueOf(40.0));
         hourlyPrices.put(VehicleType.BIKE, BigDecimal.valueOf(20.0));

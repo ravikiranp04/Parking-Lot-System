@@ -1,14 +1,17 @@
+package ParkingSystem;
+
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.logging.Logger;
-import
+import PricingStrategies.pricingStrategy;
+
 public class ParkingSystem {
     private static final Logger log = Logger.getLogger(ParkingSystem.class.getName());
     private final Object lock = new Object();
     private Map<VehicleType, Queue<Integer>> availableSlotIds;
     private Map<String,Token> tokenIdToTokenMap;
     private pricingStrategy pricingStrategy;
-    ParkingSystem(Map<VehicleType, Integer> slotCountsByType, pricingStrategy pricingStrategy){
+    public ParkingSystem(Map<VehicleType, Integer> slotCountsByType, pricingStrategy pricingStrategy){
         tokenIdToTokenMap = new HashMap<>();
         availableSlotIds = new HashMap<>();
         for(VehicleType vehicleType: VehicleType.values()){
@@ -20,7 +23,7 @@ public class ParkingSystem {
         }
         this.pricingStrategy=pricingStrategy;
     }
-    boolean checkSlotAvailability(VehicleType vehicleType){
+    public boolean checkSlotAvailability(VehicleType vehicleType){
         return availableSlotIds.get(vehicleType).size()>0;
     }
     ParkingSlot assignParkingSlot(Vehicle vehicleDetails){
@@ -30,8 +33,7 @@ public class ParkingSystem {
     Token createToken(Vehicle vehicleDetails,Integer gateId){
         synchronized (lock){
             ParkingSlot parkingSlot = assignParkingSlot(vehicleDetails);
-            BigDecimal pricePerHour = pricingStrategy.getHourlyPrice(vehicleDetails.getVehicleType());
-            Token tokenDetails = new Token(vehicleDetails,parkingSlot, pricePerHour,gateId);
+            Token tokenDetails = new Token(vehicleDetails,parkingSlot,gateId);
             tokenIdToTokenMap.put(tokenDetails.getTokenid(),tokenDetails);
             parkingSlot.setTokenDetails(tokenDetails);
             return tokenDetails;
@@ -55,7 +57,7 @@ public class ParkingSystem {
    Token getToken(String tokenId){
         return tokenIdToTokenMap.get(tokenId);
    }
-   boolean isTokenActive(String tokenId){
+   public boolean isTokenActive(String tokenId){
         return tokenIdToTokenMap.containsKey(tokenId);
    }
 

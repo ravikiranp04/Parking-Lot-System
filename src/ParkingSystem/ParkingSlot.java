@@ -1,3 +1,5 @@
+package ParkingSystem;
+
 public class ParkingSlot {
     private int slotId;
     private Token tokenDetails;

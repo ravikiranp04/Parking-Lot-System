@@ -1,4 +1,4 @@
-import java.math.BigDecimal;
+package ParkingSystem;
 
 public enum VehicleType {
     CAR, BIKE, BUS

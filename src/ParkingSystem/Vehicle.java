@@ -1,12 +1,14 @@
+package ParkingSystem;
+
 public class Vehicle {
     private String registrationNumber;
     private VehicleType vehicleType;
 
-    Vehicle(String registrationNumber, VehicleType vehicleType){
+    public Vehicle(String registrationNumber, VehicleType vehicleType){
         this.registrationNumber=registrationNumber;
         this.vehicleType=vehicleType;
     }
-    VehicleType getVehicleType(){
+    public VehicleType getVehicleType(){
         return vehicleType;
     }
     String getRegistrationNumber(){
