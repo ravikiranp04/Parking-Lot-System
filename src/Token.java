@@ -26,6 +26,12 @@ public class Token {
     void setExitTime(){
         this.exitTime=LocalDateTime.now();
     }
+    LocalDateTime getEntryTime(){
+        return entryTime;
+    }
+    LocalDateTime getExitTime(){
+        return exitTime;
+    }
     void setExitGateId(Integer exitGateId){
         this.exitGateId=exitGateId;
     }
@@ -46,15 +52,6 @@ public class Token {
         log.info("Entry Time: "+entryTime);
         log.info("Vehicle Type: "+vehicleDetails.getVehicleType());
         log.info("Parking Slot: "+parkingSlot.getSlotId());
-    }
-    BigDecimal calculateFare(){
-        Duration totalDuration = Duration.between(entryTime, exitTime);
-
-        BigDecimal totalHours = BigDecimal.valueOf(totalDuration.toMinutes() / 60.0);
-        VehicleType vehicleType = vehicleDetails.getVehicleType();
-        log.info("Total Duration :"+ totalDuration.toHours()+ " hours "+totalDuration.toMinutes()%60+ "Mins.\n");
-        BigDecimal totalFare = totalHours.multiply(pricePerHour);
-        return totalFare;
     }
     ParkingSlot getParkingSlot(){
         return parkingSlot;

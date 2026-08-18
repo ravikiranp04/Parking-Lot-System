@@ -42,7 +42,8 @@ public class Main {
         int bikeSlots = sc.nextInt();
         slotsCountByType.put(VehicleType.BIKE,bikeSlots);
 
-        ParkingSystem parkingSystem = new ParkingSystem(slotsCountByType, new PricingStrategy());
+        pricingStrategy pricingStrategy = new hourlyPricingStrategy();
+        ParkingSystem parkingSystem = new ParkingSystem(slotsCountByType,pricingStrategy);
         return parkingSystem;
     }
 

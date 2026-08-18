@@ -1,15 +1,14 @@
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.logging.Logger;
-
+import
 public class ParkingSystem {
     private static final Logger log = Logger.getLogger(ParkingSystem.class.getName());
     private final Object lock = new Object();
     private Map<VehicleType, Queue<Integer>> availableSlotIds;
     private Map<String,Token> tokenIdToTokenMap;
-    private PricingStrategy pricingStrategy;
-    ParkingSystem(Map<VehicleType, Integer> slotCountsByType,PricingStrategy pricingStrategy){
+    private pricingStrategy pricingStrategy;
+    ParkingSystem(Map<VehicleType, Integer> slotCountsByType, pricingStrategy pricingStrategy){
         tokenIdToTokenMap = new HashMap<>();
         availableSlotIds = new HashMap<>();
         for(VehicleType vehicleType: VehicleType.values()){
@@ -41,7 +40,7 @@ public class ParkingSystem {
     void exitVehicle(Token tokenDetails){
         tokenDetails.setExitTime();
         tokenIdToTokenMap.remove(tokenDetails.getTokenid());
-        BigDecimal totalFare = tokenDetails.calculateFare();
+        BigDecimal totalFare = pricingStrategy.calculateFare(tokenDetails);
         log.info("Please pay Rs. "+totalFare);
         releaseParkingSlot(tokenDetails);
     }
