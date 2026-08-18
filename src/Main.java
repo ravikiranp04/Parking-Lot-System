@@ -76,12 +76,12 @@ public class Main {
            switch(option){
                case 1:
 
-                   //Selecting ParkingSystem.Vehicle Type and Entry ParkingSystem.Gate Id
+                   //Selecting Vehicle Type and Entry Gate Id
                    log.info("Enter Entry Gate Id (Max: :"+entryGatesCount+")");
                    Integer entryGateId = sc.nextInt();
                    Gate entryGate = entryGatesRegistry.get(entryGateId);
 
-                   //Selecting ParkingSystem.Vehicle Type
+                   //Selecting Vehicle Type
                    VehicleType vehicleType = selectVehicleType();
                    if(vehicleType==null){
                        log.info("Invalid Vehicle Type");
@@ -92,12 +92,12 @@ public class Main {
                         log.info("No slots available");
                         break;
                     }
-                    //Enter ParkingSystem.Vehicle Reg No
+                    //Enter Vehicle Reg No
                    log.info("Enter Registration Number");
                    String registrationNumber = sc.next();
                    Vehicle vehicleDetails = new Vehicle(registrationNumber,vehicleType);
 
-                    //Creating and printing ParkingSystem.Token at gate
+                    //Creating and printing Token at gate
                     entryGate.handleEntry(vehicleDetails);
                     break;
 
@@ -105,17 +105,17 @@ public class Main {
                    log.info("Enter Exit Gate Id (Max: :"+exitGatesCount+")");
                    Integer exitGateId = sc.nextInt();
 
-                   // Get Exit ParkingSystem.Gate Object
+                   // Get Exit Gate Object
                    Gate exitGate = exitGatesRegistry.get(exitGateId);
                    log.info("Scan the Token");
                    String tokenId = sc.next();
 
-                   // Checking ParkingSystem.Token Validity
+                   // Checking Token Validity
                    if(!parkingSystem.isTokenActive(tokenId)){
                        log.warning("Exit Attempted at Gate "+exitGateId+" with invalid token.");
                        break;
                    }
-                   // Retreiving ParkingSystem.Token Details and Exit clearance
+                   // Retreiving Token Details and Exit clearance
                    exitGate.handleExit(tokenId);
                    break;
                default:
