@@ -1,15 +1,16 @@
 import ParkingSystem.ParkingSystem;
 import ParkingSystem.VehicleType;
-import PaymentProcessor.cardPaymentProcessor;
-import PaymentProcessor.paymentProcessor;
-import PaymentProcessor.upiPaymentProcessor;
-import PricingStrategies.hourlyPricingStrategy;
+import PaymentProcessor.CardPaymentProcessor;
+import PaymentProcessor.CashPaymentProcessor;
+import PaymentProcessor.PaymentProcessor;
+import PaymentProcessor.UpiPaymentProcessor;
 import PricingStrategies.minutesPricingStrategy;
 import PricingStrategies.pricingStrategy;
+import PaymentProcessor.PaymentResult;
 import ParkingSystem.Gate;
 import ParkingSystem.GateType;
 import ParkingSystem.Vehicle;
-
+import ParkingSystem.Token;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -64,15 +65,33 @@ public class Main {
         while(true){
             log.info("Select Payment Method.\n1)UPI\n2)Card");
             int paymentOption = sc.nextInt();
-            paymentProcessor paymentProcessor;
+            PaymentProcessor paymentProcessor;
+            PaymentResult paymentResult;
             switch(paymentOption){
                 case 1:
-                    paymentProcessor = new upiPaymentProcessor();
-                    paymentProcessor.pay(totalFare);
-                    return;
+                    paymentProcessor = new UpiPaymentProcessor();
+                    paymentResult=paymentProcessor.pay(totalFare);
+                    if(paymentResult.isPaymentStatus()){
+                        log.info("Payment successful");
+                        return;
+                    }
+                    log.info("Payment Unuccessful");
+                    break;
                 case 2:
-                    paymentProcessor = new cardPaymentProcessor();
-                    paymentProcessor.pay(totalFare);
+                    paymentProcessor = new CardPaymentProcessor();
+                    paymentResult=paymentProcessor.pay(totalFare);
+                    if(paymentResult.isPaymentStatus()){
+                        log.info("Payment Successful");
+                        return;
+
+                    }
+                    log.info("Payment Unsuccessful");
+                    break;
+
+                case 3:
+                    paymentProcessor = new CashPaymentProcessor();
+                    paymentResult=paymentProcessor.pay(totalFare);
+                    log.info("Payment Successful");
                     return;
                 default:
                     log.info("Invalid Option");
@@ -137,12 +156,15 @@ public class Main {
                    Gate exitGate = exitGatesRegistry.get(exitGateId);
                    log.info("Scan the Token");
                    String tokenId = sc.next();
-
+                   Token tokenDetails = parkingSystem.getToken(tokenId);
                    // Checking Token Validity
                    if(!parkingSystem.isTokenActive(tokenId)){
                        log.warning("Exit Attempted at Gate "+exitGateId+" with invalid token.");
                        break;
                    }
+
+                   //Exit clearance
+                   exitGate.handleExit(tokenDetails);
 
 
                    //Fare Calculation
@@ -152,9 +174,8 @@ public class Main {
 
                    //Payment Processing
                    collectPayment(totalFare);
+                   log.info("Gates Opened. ParkingSystem.Vehicle exit at ParkingSystem.Gate Id: "+tokenDetails.getExitGateId());
 
-                   // Retreiving Token Details and Exit clearance
-                   exitGate.handleExit(tokenId);
                    break;
                default:
                    log.info("Invalid Option");

@@ -18,11 +18,10 @@ public class Gate {
         tokenDetails.printToken();
         return;
     }
-    public void handleExit(String tokenId){
-        Token tokenDetails = parkingSystem.getToken(tokenId);
+    public void handleExit(Token tokenDetails){
+
         tokenDetails.setExitGateId(gateId);
         parkingSystem.exitVehicle(tokenDetails);
-        log.info("Gates Opened. ParkingSystem.Vehicle exit at ParkingSystem.Gate Id: "+gateId);
         return;
     }
 }

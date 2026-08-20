@@ -37,10 +37,10 @@ public class Token {
     void setEntryGateId(Integer entryGateId){
         this.entryGateId=entryGateId;
     }
-    Integer getEntryGateId(){
+    public Integer getEntryGateId(){
         return entryGateId;
     }
-    Integer getExitGateId(){
+    public Integer getExitGateId(){
         return exitGateId;
     }
     void printToken(){
