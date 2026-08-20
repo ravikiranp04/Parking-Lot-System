@@ -14,7 +14,7 @@ public class Gate {
     }
     public void handleEntry(Vehicle vehicleDetails){
         Token tokenDetails = parkingSystem.createToken(vehicleDetails,gateId);
-        log.info("ParkingSystem.Token Created for ParkingSystem.Vehicle "+vehicleDetails.getRegistrationNumber()+", "+vehicleDetails.getVehicleType()+" at Entry ParkingSystem.Gate: "+tokenDetails.getEntryGateId());
+        log.info("Token Created for ParkingSystem.Vehicle "+vehicleDetails.getRegistrationNumber()+", "+vehicleDetails.getVehicleType()+" at Entry ParkingSystem.Gate: "+tokenDetails.getEntryGateId());
         tokenDetails.printToken();
         return;
     }
@@ -22,6 +22,7 @@ public class Gate {
 
         tokenDetails.setExitGateId(gateId);
         parkingSystem.exitVehicle(tokenDetails);
+        log.info("Gates Opened. Vehicle exit at Gate Id: "+tokenDetails.getExitGateId());
         return;
     }
 }

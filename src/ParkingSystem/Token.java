@@ -22,7 +22,7 @@ public class Token {
         this.entryTime = LocalDateTime.now();
         this.entryGateId=entryGateId;
     }
-    void setExitTime(){
+    public void setExitTime(){
         this.exitTime=LocalDateTime.now();
     }
     public LocalDateTime getEntryTime(){

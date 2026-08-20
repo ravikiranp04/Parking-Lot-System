@@ -43,7 +43,6 @@ public class ParkingSystem {
         }
     }
     void exitVehicle(Token tokenDetails){
-        tokenDetails.setExitTime();
         tokenIdToTokenMap.remove(tokenDetails.getTokenid());
         releaseParkingSlot(tokenDetails);
     }
