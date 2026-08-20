@@ -1,11 +1,16 @@
 import ParkingSystem.ParkingSystem;
 import ParkingSystem.VehicleType;
+import PaymentProcessor.cardPaymentProcessor;
+import PaymentProcessor.paymentProcessor;
+import PaymentProcessor.upiPaymentProcessor;
 import PricingStrategies.hourlyPricingStrategy;
 import PricingStrategies.minutesPricingStrategy;
 import PricingStrategies.pricingStrategy;
 import ParkingSystem.Gate;
 import ParkingSystem.GateType;
 import ParkingSystem.Vehicle;
+
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.*;
@@ -53,6 +58,29 @@ public class Main {
         pricingStrategy pricingStrategy = new minutesPricingStrategy();
         ParkingSystem parkingSystem = new ParkingSystem(slotsCountByType,pricingStrategy);
         return parkingSystem;
+    }
+
+    public static void collectPayment(BigDecimal totalFare){
+        while(true){
+            log.info("Select Payment Method.\n1)UPI\n2)Card");
+            int paymentOption = sc.nextInt();
+            paymentProcessor paymentProcessor;
+            switch(paymentOption){
+                case 1:
+                    paymentProcessor = new upiPaymentProcessor();
+                    paymentProcessor.pay(totalFare);
+                    return;
+                case 2:
+                    paymentProcessor = new cardPaymentProcessor();
+                    paymentProcessor.pay(totalFare);
+                    return;
+                default:
+                    log.info("Invalid Option");
+                    break;
+            }
+        }
+
+
     }
 
     public static void main(String[] args) {
@@ -115,6 +143,16 @@ public class Main {
                        log.warning("Exit Attempted at Gate "+exitGateId+" with invalid token.");
                        break;
                    }
+
+
+                   //Fare Calculation
+                   pricingStrategy pricingStrategy = parkingSystem.getPricingStrategy();
+                   BigDecimal totalFare = pricingStrategy.calculateFare(parkingSystem.getToken(tokenId));
+                   log.info("Please pay Rs. "+totalFare);
+
+                   //Payment Processing
+                   collectPayment(totalFare);
+
                    // Retreiving Token Details and Exit clearance
                    exitGate.handleExit(tokenId);
                    break;

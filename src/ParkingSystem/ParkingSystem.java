@@ -10,6 +10,9 @@ public class ParkingSystem {
     private final Object lock = new Object();
     private Map<VehicleType, Queue<Integer>> availableSlotIds;
     private Map<String,Token> tokenIdToTokenMap;
+
+
+
     private pricingStrategy pricingStrategy;
     public ParkingSystem(Map<VehicleType, Integer> slotCountsByType, pricingStrategy pricingStrategy){
         tokenIdToTokenMap = new HashMap<>();
@@ -42,8 +45,6 @@ public class ParkingSystem {
     void exitVehicle(Token tokenDetails){
         tokenDetails.setExitTime();
         tokenIdToTokenMap.remove(tokenDetails.getTokenid());
-        BigDecimal totalFare = pricingStrategy.calculateFare(tokenDetails);
-        log.info("Please pay Rs. "+totalFare);
         releaseParkingSlot(tokenDetails);
     }
     void releaseParkingSlot(Token tokenDetails){
@@ -54,11 +55,15 @@ public class ParkingSystem {
         parkingSlot.setTokenDetails(null);
         parkingSlot.setIsOccupied(false);
    }
-   Token getToken(String tokenId){
+   public Token getToken(String tokenId){
         return tokenIdToTokenMap.get(tokenId);
    }
    public boolean isTokenActive(String tokenId){
         return tokenIdToTokenMap.containsKey(tokenId);
    }
+
+    public pricingStrategy getPricingStrategy() {
+        return pricingStrategy;
+    }
 
 }
