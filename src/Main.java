@@ -17,7 +17,7 @@ public class Main {
     static Scanner sc = new Scanner(System.in);
     private static final Logger log = Logger.getLogger(Main.class.getName());
     public static VehicleType selectVehicleType(){
-        log.info("Enter ParkingSystem.Vehicle Type (1/2/3) \n1.CAR\n2.BIKE\n3.BUS");
+        log.info("Enter Vehicle Type (1/2/3) \n1.CAR\n2.BIKE\n3.BUS");
         int num = sc.nextInt();
         VehicleType vehicleType = null;
         switch(num){
