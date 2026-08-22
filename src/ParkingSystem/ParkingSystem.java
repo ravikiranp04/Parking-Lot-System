@@ -1,8 +1,8 @@
 package ParkingSystem;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
-
 import Floor.FloorFactory;
 import PricingStrategies.PricingStrategy;
 
@@ -10,15 +10,11 @@ public class ParkingSystem {
     private static final Logger log = Logger.getLogger(ParkingSystem.class.getName());
     private final Object lock = new Object();
     private Map<String,Token> tokenIdToTokenMap;
-
-
-
     private FloorFactory floorFactory;
-
-
     private PricingStrategy pricingStrategy;
+
     public ParkingSystem(PricingStrategy pricingStrategy, FloorFactory floorFactory){
-        tokenIdToTokenMap = new HashMap<>();
+        tokenIdToTokenMap = new ConcurrentHashMap<>();
         this.pricingStrategy=pricingStrategy;
         this.floorFactory = floorFactory;
     }
@@ -32,12 +28,10 @@ public class ParkingSystem {
     }
 
     Token createToken(Vehicle vehicleDetails,Integer gateId, ParkingSlot parkingSlot){
-        synchronized (lock){
             Token tokenDetails = new Token(vehicleDetails,parkingSlot,gateId);
             tokenIdToTokenMap.put(tokenDetails.getTokenid(),tokenDetails);
             parkingSlot.setTokenDetails(tokenDetails);
             return tokenDetails;
-        }
     }
     void exitVehicle(Token tokenDetails){
         tokenIdToTokenMap.remove(tokenDetails.getTokenid());

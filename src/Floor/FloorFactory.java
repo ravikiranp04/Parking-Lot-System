@@ -45,7 +45,7 @@ public class FloorFactory {
     public ParkingSlot getAvailability(VehicleType vehicleType){
         ParkingSlot parkingSlot=null;
         for(Floor floor: vehicleTypeToFloors.get(vehicleType)){
-            parkingSlot = floor.getSlot();
+            parkingSlot = floor.allocateSlot();
             if(parkingSlot!=null){
                 return parkingSlot;
             }

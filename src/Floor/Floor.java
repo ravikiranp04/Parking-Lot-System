@@ -5,20 +5,21 @@ import ParkingSystem.VehicleType;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class Floor {
-    private Queue<Integer> availableSlots;
+    private ArrayBlockingQueue<Integer> availableSlots;
     private VehicleType vehicleType;
     private Integer floorId;
     Floor(Integer floorId,VehicleType vehicleType, Integer slots){
         this.vehicleType=vehicleType;
         this.floorId=floorId;
-        this.availableSlots = new LinkedList<>();
+        this.availableSlots = new ArrayBlockingQueue<>(slots);
         for(Integer i=1;i<=slots;i++){
             availableSlots.offer(i);
         }
     }
-    public ParkingSlot getSlot(){
+    public ParkingSlot allocateSlot(){
         if(availableSlots.isEmpty()){
             return null;
         }
