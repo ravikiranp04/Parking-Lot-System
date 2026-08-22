@@ -1,31 +1,48 @@
 package ParkingSystem;
 
 public class ParkingSlot {
-    private int slotId;
+    private Integer slotId;
+
+    public void setFloorId(Integer floorId) {
+        this.floorId = floorId;
+    }
+
+    private Integer floorId;
+
     private Token tokenDetails;
     private Vehicle vehicleDetails;
-    private boolean isOccupied;
-    ParkingSlot(int slotId,Vehicle vehicleDetails){
+
+    public ParkingSlot(Integer floorId, Integer slotId){
         this.slotId=slotId;
-        this.vehicleDetails=vehicleDetails;
-        this.isOccupied= true;
+        this.floorId=floorId;
     }
+
     void setVehicleDetails(Vehicle vehicleDetails){
         this.vehicleDetails=vehicleDetails;
     }
+
     void setTokenDetails(Token tokenDetails){
         this.tokenDetails=tokenDetails;
     }
-    Vehicle getVehicleDetails(){
-        return vehicleDetails;
-    }
-    Token getTokenDetails(){
+
+    public Token getTokenDetails() {
         return tokenDetails;
     }
-    Integer getSlotId(){
+
+    public Vehicle getVehicleDetails() {
+        return vehicleDetails;
+    }
+
+    public Integer getFloorId() {
+        return floorId;
+    }
+
+    public Integer getSlotId(){
         return slotId;
     }
-    void setIsOccupied(boolean value){
-        this.isOccupied=value;
+    void freeSlot(){
+        setVehicleDetails(null);
+        setTokenDetails(null);
+        setFloorId(null);
     }
 }

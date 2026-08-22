@@ -9,9 +9,9 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-public class minutesPricingStrategy implements  pricingStrategy{
+public class MinutesPricingStrategy implements PricingStrategy {
     private Map<VehicleType, BigDecimal> minutesPrices;
-    public minutesPricingStrategy(){
+    public MinutesPricingStrategy(){
         minutesPrices = new HashMap<>();
         minutesPrices.put(VehicleType.CAR, BigDecimal.valueOf(1.0));
         minutesPrices.put(VehicleType.BIKE, BigDecimal.valueOf(0.5));

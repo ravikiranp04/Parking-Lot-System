@@ -1,6 +1,6 @@
 package ParkingSystem;
 
-import java.math.BigDecimal;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -22,9 +22,7 @@ public class Token {
         this.entryTime = LocalDateTime.now();
         this.entryGateId=entryGateId;
     }
-    public void setExitTime(){
-        this.exitTime=LocalDateTime.now();
-    }
+
     public LocalDateTime getEntryTime(){
         return entryTime;
     }
@@ -50,7 +48,8 @@ public class Token {
         log.info("RegNo: "+vehicleDetails.getRegistrationNumber());
         log.info("Entry Time: "+entryTime);
         log.info("ParkingSystem.Vehicle Type: "+vehicleDetails.getVehicleType());
-        log.info("Parking Slot: "+parkingSlot.getSlotId());
+        log.info("Parking Slot Details: ");
+        getSlotDetails();
     }
     ParkingSlot getParkingSlot(){
         return parkingSlot;
@@ -62,5 +61,11 @@ public class Token {
         return tokenid;
     }
 
-
+    public void getSlotDetails(){
+        log.info("Floor: "+parkingSlot.getFloorId()+", Slot: "+parkingSlot.getSlotId());
+        return;
+    }
+    public void setExitTime(){
+        this.exitTime=LocalDateTime.now();
+    }
 }

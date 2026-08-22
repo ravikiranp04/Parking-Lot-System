@@ -1,0 +1,7 @@
+{
+  "0": ["VehicleType.BUS", 20],
+  "1":  ["VehicleType.CAR", 30],
+  "2":  ["VehicleType.CAR", 30],
+  "3":  ["VehicleType.BIKE", 50],
+  "4":  ["VehicleType.BIKE", 50]
+}

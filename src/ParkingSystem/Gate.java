@@ -1,7 +1,6 @@
 package ParkingSystem;
 
 import java.util.logging.Logger;
-
 public class Gate {
     Integer gateId;
     GateType gateType;
@@ -12,9 +11,11 @@ public class Gate {
         this.gateType=gateType;
         this.parkingSystem=parkingSystem;
     }
-    public void handleEntry(Vehicle vehicleDetails){
-        Token tokenDetails = parkingSystem.createToken(vehicleDetails,gateId);
-        log.info("Token Created for ParkingSystem.Vehicle "+vehicleDetails.getRegistrationNumber()+", "+vehicleDetails.getVehicleType()+" at Entry ParkingSystem.Gate: "+tokenDetails.getEntryGateId());
+    public void handleEntry(Vehicle vehicleDetails, ParkingSlot parkingSlot){
+
+        parkingSlot.setVehicleDetails(vehicleDetails);
+        Token tokenDetails = parkingSystem.createToken(vehicleDetails,gateId, parkingSlot);
+        log.info("Token Created for Vehicle "+vehicleDetails.getRegistrationNumber()+", "+vehicleDetails.getVehicleType()+" at Entry ParkingSystem.Gate: "+tokenDetails.getEntryGateId());
         tokenDetails.printToken();
         return;
     }

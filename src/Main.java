@@ -1,16 +1,19 @@
+import Floor.Floor;
 import ParkingSystem.ParkingSystem;
 import ParkingSystem.VehicleType;
 import PaymentProcessor.CardPaymentProcessor;
 import PaymentProcessor.CashPaymentProcessor;
 import PaymentProcessor.PaymentProcessor;
 import PaymentProcessor.UpiPaymentProcessor;
-import PricingStrategies.minutesPricingStrategy;
-import PricingStrategies.pricingStrategy;
+import PricingStrategies.MinutesPricingStrategy;
+import PricingStrategies.PricingStrategy;
 import PaymentProcessor.PaymentResult;
 import ParkingSystem.Gate;
 import ParkingSystem.GateType;
 import ParkingSystem.Vehicle;
+import ParkingSystem.ParkingSlot;
 import ParkingSystem.Token;
+import Floor.FloorFactory;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -43,21 +46,9 @@ public class Main {
     }
 
     public static ParkingSystem initializeParkingSystem(){
-        Map<VehicleType,Integer> slotsCountByType= new HashMap<>();
-        log.info("Enter no of bus slots");
-        int busSlots = sc.nextInt();
-        slotsCountByType.put(VehicleType.BUS,busSlots);
-
-        log.info("Enter no of car slots");
-        int carSlots = sc.nextInt();
-        slotsCountByType.put(VehicleType.CAR,carSlots);
-
-        log.info("Enter no of bike slots");
-        int bikeSlots = sc.nextInt();
-        slotsCountByType.put(VehicleType.BIKE,bikeSlots);
-
-        pricingStrategy pricingStrategy = new minutesPricingStrategy();
-        ParkingSystem parkingSystem = new ParkingSystem(slotsCountByType,pricingStrategy);
+        PricingStrategy pricingStrategy = new MinutesPricingStrategy();
+        FloorFactory floorFactory = new FloorFactory();
+        ParkingSystem parkingSystem = new ParkingSystem(pricingStrategy,floorFactory);
         return parkingSystem;
     }
 
@@ -135,17 +126,19 @@ public class Main {
                        break;
                    }
                    // Checking Slot availability
-                    if(!parkingSystem.checkSlotAvailability(vehicleType)){
-                        log.info("No slots available");
-                        break;
-                    }
+                   ParkingSlot parkingSlot = parkingSystem.checkParkingAvailability(vehicleType);
+                   if(parkingSlot==null){
+                       log.info("No Slots available!!");
+                       break;
+                   }
                     //Enter Vehicle Reg No
                    log.info("Enter Registration Number");
                    String registrationNumber = sc.next();
                    Vehicle vehicleDetails = new Vehicle(registrationNumber,vehicleType);
 
                     //Creating and printing Token at gate
-                    entryGate.handleEntry(vehicleDetails);
+                    entryGate.handleEntry(vehicleDetails,parkingSlot);
+
                     break;
 
                case 2:
@@ -164,7 +157,7 @@ public class Main {
                    }
                    tokenDetails.setExitTime();
                    //Fare Calculation
-                   pricingStrategy pricingStrategy = parkingSystem.getPricingStrategy();
+                   PricingStrategy pricingStrategy = parkingSystem.getPricingStrategy();
                    BigDecimal totalFare = pricingStrategy.calculateFare(parkingSystem.getToken(tokenId));
                    log.info("Please pay Rs. "+totalFare);
 

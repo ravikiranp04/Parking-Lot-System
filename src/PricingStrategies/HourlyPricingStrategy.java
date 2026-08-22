@@ -8,9 +8,9 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-public class hourlyPricingStrategy implements pricingStrategy {
+public class HourlyPricingStrategy implements PricingStrategy {
     private Map<VehicleType, BigDecimal> hourlyPrices;
-    public hourlyPricingStrategy(){
+    public HourlyPricingStrategy(){
         hourlyPrices = new HashMap<>();
         hourlyPrices.put(VehicleType.CAR, BigDecimal.valueOf(40.0));
         hourlyPrices.put(VehicleType.BIKE, BigDecimal.valueOf(20.0));
