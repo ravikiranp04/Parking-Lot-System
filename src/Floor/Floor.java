@@ -20,10 +20,11 @@ public class Floor {
         }
     }
     public ParkingSlot allocateSlot(){
-        if(availableSlots.isEmpty()){
+        Integer slotId = availableSlots.poll();
+        if(slotId==null){
             return null;
         }
-        return new ParkingSlot(floorId,availableSlots.poll());
+        return new ParkingSlot(floorId,slotId);
     }
 
     public VehicleType getVehicleType() {

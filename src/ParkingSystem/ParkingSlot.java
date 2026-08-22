@@ -2,13 +2,7 @@ package ParkingSystem;
 
 public class ParkingSlot {
     private Integer slotId;
-
-    public void setFloorId(Integer floorId) {
-        this.floorId = floorId;
-    }
-
     private Integer floorId;
-
     private Token tokenDetails;
     private Vehicle vehicleDetails;
 
@@ -40,9 +34,14 @@ public class ParkingSlot {
     public Integer getSlotId(){
         return slotId;
     }
+
     void freeSlot(){
         setVehicleDetails(null);
         setTokenDetails(null);
         setFloorId(null);
+    }
+
+    public void setFloorId(Integer floorId) {
+        this.floorId = floorId;
     }
 }

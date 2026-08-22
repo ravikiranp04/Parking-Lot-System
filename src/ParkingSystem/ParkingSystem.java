@@ -28,10 +28,18 @@ public class ParkingSystem {
     }
 
     Token createToken(Vehicle vehicleDetails,Integer gateId, ParkingSlot parkingSlot){
-            Token tokenDetails = new Token(vehicleDetails,parkingSlot,gateId);
-            tokenIdToTokenMap.put(tokenDetails.getTokenid(),tokenDetails);
-            parkingSlot.setTokenDetails(tokenDetails);
-            return tokenDetails;
+
+        Token tokenDetails = new Token(vehicleDetails, parkingSlot, gateId);
+        tokenIdToTokenMap.put(tokenDetails.getTokenid(), tokenDetails);
+        parkingSlot.setTokenDetails(tokenDetails);
+        return tokenDetails;
+
+//        synchronized (lock) {
+//            Token tokenDetails = new Token(vehicleDetails, parkingSlot, gateId);
+//            tokenIdToTokenMap.put(tokenDetails.getTokenid(), tokenDetails);
+//            parkingSlot.setTokenDetails(tokenDetails);
+//            return tokenDetails;
+//        }
     }
     void exitVehicle(Token tokenDetails){
         tokenIdToTokenMap.remove(tokenDetails.getTokenid());
