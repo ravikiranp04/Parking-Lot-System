@@ -1,7 +1,7 @@
 {
-  "0": ["VehicleType.BUS", 20],
-  "1":  ["VehicleType.CAR", 30],
-  "2":  ["VehicleType.CAR", 30],
-  "3":  ["VehicleType.BIKE", 50],
-  "4":  ["VehicleType.BIKE", 50]
+  "0": ["BUS", 2],
+  "1":  ["CAR", 1],
+  "2":  ["CAR", 2],
+  "3":  ["BIKE", 1],
+  "4":  ["BIKE", 2]
 }

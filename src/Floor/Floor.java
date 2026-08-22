@@ -3,6 +3,7 @@ package Floor;
 import ParkingSystem.ParkingSlot;
 import ParkingSystem.VehicleType;
 
+import java.util.LinkedList;
 import java.util.Queue;
 
 public class Floor {
@@ -12,7 +13,8 @@ public class Floor {
     Floor(Integer floorId,VehicleType vehicleType, Integer slots){
         this.vehicleType=vehicleType;
         this.floorId=floorId;
-        for(int i=1;i<=slots;i++){
+        this.availableSlots = new LinkedList<>();
+        for(Integer i=1;i<=slots;i++){
             availableSlots.offer(i);
         }
     }
