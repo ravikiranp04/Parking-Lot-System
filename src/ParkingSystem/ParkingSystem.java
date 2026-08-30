@@ -33,13 +33,6 @@ public class ParkingSystem {
         tokenIdToTokenMap.put(tokenDetails.getTokenid(), tokenDetails);
         parkingSlot.setTokenDetails(tokenDetails);
         return tokenDetails;
-
-//        synchronized (lock) {
-//            Token tokenDetails = new Token(vehicleDetails, parkingSlot, gateId);
-//            tokenIdToTokenMap.put(tokenDetails.getTokenid(), tokenDetails);
-//            parkingSlot.setTokenDetails(tokenDetails);
-//            return tokenDetails;
-//        }
     }
     void exitVehicle(Token tokenDetails){
         tokenIdToTokenMap.remove(tokenDetails.getTokenid());
@@ -49,7 +42,6 @@ public class ParkingSystem {
         ParkingSlot parkingSlot = tokenDetails.getParkingSlot();
         floorFactory.releaseParkingSlot(parkingSlot);
         parkingSlot.freeSlot();
-
    }
    public Token getToken(String tokenId){
         return tokenIdToTokenMap.get(tokenId);
@@ -58,7 +50,7 @@ public class ParkingSystem {
         return tokenIdToTokenMap.containsKey(tokenId);
    }
 
-    public PricingStrategy getPricingStrategy() {
+   public PricingStrategy getPricingStrategy() {
         return pricingStrategy;
     }
 

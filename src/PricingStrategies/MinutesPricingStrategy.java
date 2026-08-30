@@ -3,7 +3,6 @@ package PricingStrategies;
 import ParkingSystem.Token;
 import ParkingSystem.Vehicle;
 import ParkingSystem.VehicleType;
-
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.HashMap;

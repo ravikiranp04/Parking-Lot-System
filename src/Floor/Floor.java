@@ -2,9 +2,6 @@ package Floor;
 
 import ParkingSystem.ParkingSlot;
 import ParkingSystem.VehicleType;
-
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class Floor {
