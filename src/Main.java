@@ -1,3 +1,20 @@
+import Floor.Floor;
+import ParkingSystem.ParkingSystem;
+import ParkingSystem.VehicleType;
+import PaymentProcessor.CardPaymentProcessor;
+import PaymentProcessor.CashPaymentProcessor;
+import PaymentProcessor.PaymentProcessor;
+import PaymentProcessor.UpiPaymentProcessor;
+import PricingStrategies.MinutesPricingStrategy;
+import PricingStrategies.PricingStrategy;
+import PaymentProcessor.PaymentResult;
+import ParkingSystem.Gate;
+import ParkingSystem.GateType;
+import ParkingSystem.Vehicle;
+import ParkingSystem.ParkingSlot;
+import ParkingSystem.Token;
+import Floor.FloorFactory;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.*;
@@ -29,21 +46,51 @@ public class Main {
     }
 
     public static ParkingSystem initializeParkingSystem(){
-        Map<VehicleType,Integer> slotsCountByType= new HashMap<>();
-        log.info("Enter no of bus slots");
-        int busSlots = sc.nextInt();
-        slotsCountByType.put(VehicleType.BUS,busSlots);
-
-        log.info("Enter no of car slots");
-        int carSlots = sc.nextInt();
-        slotsCountByType.put(VehicleType.CAR,carSlots);
-
-        log.info("Enter no of bike slots");
-        int bikeSlots = sc.nextInt();
-        slotsCountByType.put(VehicleType.BIKE,bikeSlots);
-
-        ParkingSystem parkingSystem = new ParkingSystem(slotsCountByType, new PricingStrategy());
+        PricingStrategy pricingStrategy = new MinutesPricingStrategy();
+        FloorFactory floorFactory = new FloorFactory();
+        ParkingSystem parkingSystem = new ParkingSystem(pricingStrategy,floorFactory);
         return parkingSystem;
+    }
+
+    public static PaymentResult collectPayment(BigDecimal totalFare){
+        while(true){
+            log.info("Select Payment Method.\n1)UPI\n2)Card\n3)Cash");
+            int paymentOption = sc.nextInt();
+            PaymentProcessor paymentProcessor;
+            PaymentResult paymentResult;
+            switch(paymentOption){
+                case 1:
+                    paymentProcessor = new UpiPaymentProcessor();
+                    paymentResult=paymentProcessor.pay(totalFare);
+                    if(paymentResult.isPaymentStatus()){
+                        log.info("Payment successful");
+                        return paymentResult;
+                    }
+                    log.info("Payment Unsuccessful");
+                    break;
+                case 2:
+                    paymentProcessor = new CardPaymentProcessor();
+                    paymentResult=paymentProcessor.pay(totalFare);
+                    if(paymentResult.isPaymentStatus()){
+                        log.info("Payment Successful");
+                        return paymentResult;
+
+                    }
+                    log.info("Payment Unsuccessful");
+                    break;
+
+                case 3:
+                    paymentProcessor = new CashPaymentProcessor();
+                    paymentResult=paymentProcessor.pay(totalFare);
+                    log.info("Payment Successful");
+                    return paymentResult;
+                default:
+                    log.info("Invalid Option");
+                    break;
+            }
+        }
+
+
     }
 
     public static void main(String[] args) {
@@ -55,14 +102,14 @@ public class Main {
         int exitGatesCount = sc.nextInt();
         Map<Integer, Gate> entryGatesRegistry = new HashMap<>();
         for(int i=1;i<=entryGatesCount;i++){
-            entryGatesRegistry.put(i,new Gate(i,GateType.ENTRY,parkingSystem));
+            entryGatesRegistry.put(i,new Gate(i, GateType.ENTRY,parkingSystem));
         }
         Map<Integer, Gate> exitGatesRegistry = new HashMap<>();
         for(int i=1;i<=exitGatesCount;i++){
-            exitGatesRegistry.put(i,new Gate(i,GateType.EXIT,parkingSystem));
+            exitGatesRegistry.put(i,new Gate(i, GateType.EXIT,parkingSystem));
         }
         while(true){
-           log.info("----------\nEnter an Option:\n1)Enter Vehicle\n2) Exit Vehicle");
+           log.info("----------\nEnter an Option:\n1) Enter Vehicle\n2) Exit Vehicle");
            int option = sc.nextInt();
            switch(option){
                case 1:
@@ -79,17 +126,19 @@ public class Main {
                        break;
                    }
                    // Checking Slot availability
-                    if(!parkingSystem.checkSlotAvailability(vehicleType)){
-                        log.info("No slots available");
-                        break;
-                    }
+                   ParkingSlot parkingSlot = parkingSystem.checkParkingAvailability(vehicleType);
+                   if(parkingSlot==null){
+                       log.info("No Slots available!!");
+                       break;
+                   }
                     //Enter Vehicle Reg No
                    log.info("Enter Registration Number");
                    String registrationNumber = sc.next();
                    Vehicle vehicleDetails = new Vehicle(registrationNumber,vehicleType);
 
                     //Creating and printing Token at gate
-                    entryGate.handleEntry(vehicleDetails);
+                    entryGate.handleEntry(vehicleDetails,parkingSlot);
+
                     break;
 
                case 2:
@@ -100,14 +149,25 @@ public class Main {
                    Gate exitGate = exitGatesRegistry.get(exitGateId);
                    log.info("Scan the Token");
                    String tokenId = sc.next();
-
+                   Token tokenDetails = parkingSystem.getToken(tokenId);
                    // Checking Token Validity
                    if(!parkingSystem.isTokenActive(tokenId)){
                        log.warning("Exit Attempted at Gate "+exitGateId+" with invalid token.");
                        break;
                    }
-                   // Retreiving Token Details and Exit clearance
-                   exitGate.handleExit(tokenId);
+                   tokenDetails.setExitTime();
+                   //Fare Calculation
+                   PricingStrategy pricingStrategy = parkingSystem.getPricingStrategy();
+                   BigDecimal totalFare = pricingStrategy.calculateFare(parkingSystem.getToken(tokenId));
+                   log.info("Please pay Rs. "+totalFare);
+
+                   //Payment Processing
+                   PaymentResult paymentResult=collectPayment(totalFare);
+                   //Exit clearance
+                   if(paymentResult.isPaymentStatus()){
+                       exitGate.handleExit(tokenDetails);
+                   }
+
                    break;
                default:
                    log.info("Invalid Option");
