@@ -1,6 +1,5 @@
 package ParkingSystem;
 
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -42,12 +41,12 @@ public class Token {
         return exitGateId;
     }
     void printToken(){
-        log.info("Printing ParkingSystem.Token:");
-        log.info("Entry ParkingSystem.Gate: "+entryGateId);
-        log.info("ParkingSystem.Token Id: "+ getTokenid());
+        log.info("Printing Token:");
+        log.info("Entry Gate: "+entryGateId);
+        log.info("Token Id: "+ getTokenid());
         log.info("RegNo: "+vehicleDetails.getRegistrationNumber());
         log.info("Entry Time: "+entryTime);
-        log.info("ParkingSystem.Vehicle Type: "+vehicleDetails.getVehicleType());
+        log.info("Vehicle Type: "+vehicleDetails.getVehicleType());
         log.info("Parking Slot Details: ");
         getSlotDetails();
     }
@@ -57,7 +56,7 @@ public class Token {
     public Vehicle getVehicleDetails(){
         return vehicleDetails;
     }
-    String getTokenid(){
+    public String getTokenid(){
         return tokenid;
     }
 

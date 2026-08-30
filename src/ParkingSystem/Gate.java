@@ -2,9 +2,17 @@ package ParkingSystem;
 
 import java.util.logging.Logger;
 public class Gate {
-    Integer gateId;
-    GateType gateType;
-    ParkingSystem parkingSystem;
+    public GateType getGateType() {
+        return gateType;
+    }
+
+    public Integer getGateId() {
+        return gateId;
+    }
+
+    private Integer gateId;
+    private GateType gateType;
+    private ParkingSystem parkingSystem;
     private static final Logger log = Logger.getLogger(Gate.class.getName());
     public Gate(Integer gateId, GateType gateType, ParkingSystem parkingSystem){
         this.gateId=gateId;

@@ -11,4 +11,3 @@ public class CardPaymentProcessor implements PaymentProcessor {
         return new PaymentResult(true, UUID.randomUUID().toString());
     }
 }
-

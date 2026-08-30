@@ -8,6 +8,6 @@ public class UpiPaymentProcessor implements PaymentProcessor {
     @Override
     public PaymentResult pay(BigDecimal amount){
         log.info("Paid Rs "+amount+" via UPI");
-        return new PaymentResult(false, UUID.randomUUID().toString());
+        return new PaymentResult(true, UUID.randomUUID().toString());
     }
 }
